@@ -1,0 +1,20 @@
+{
+	"name": "5_bronze_views",
+	"properties": {
+		"folder": {
+			"name": "nyc_taxi/ldw"
+		},
+		"content": {
+			"query": "USE nyc_taxi_ldw\nGO\n\n\nDROP VIEW IF EXISTS bronze.rate_code \nGO\n\nCREATE VIEW bronze.rate_code\nAS  \nSELECT rate_code_id, rate_code\nFROM\n    OPENROWSET(\n        BULK 'raw/rate_code.json',\n        data_source = 'nyc_taxi_src',\n        FORMAT = 'CSV',\n        fieldterminator = '0x0b',\n        fieldquote = '0x0b',\n        rowterminator = '0x0b'\n    )\n    with(\n        jsonDoc nvarchar(max)\n    )as rate_code \n    CROSS APPLY openjson(jsonDoc)\n    with(\n        rate_code_id SMALLINT,\n        rate_code VARCHAR(20)\n    )\n    GO\n\nSELECT TOP 100 * FROM bronze.rate_code\nGO\n\n\n\nDROP VIEW IF EXISTS bronze.payment_type \nGO\n\nCREATE VIEW bronze.payment_type\nAS  \n   SELECT payment_type, payment_type_desc\nFROM\n    OPENROWSET(\n        BULK 'raw/payment_type.json',\n        data_source = 'nyc_taxi_src',\n        FORMAT = 'CSV',\n        fieldterminator = '0x0b',\n        fieldquote = '0x0b'\n    )\n    with(\n        jsonDoc nvarchar(max)\n    )as payment_type \n    CROSS APPLY openjson(jsonDoc)\n    with(\n        payment_type SMALLINT,\n        payment_type_desc VARCHAR(20)\n    )\n    GO\n\nSELECT TOP 100 * FROM bronze.payment_type\nGO\n\n\nCREATE VIEW bronze.vw_trip_data_green_csv\nAS\nSELECT\n    result.filepath(1) as year,\n    result.filepath(2) as month,\n    result.*\nFROM\n    OPENROWSET(\n        BULK 'raw/trip_data_green_csv/year=*/month=*/*.csv',\n        DATA_SOURCE = 'nyc_taxi_src',\n        FORMAT = 'CSV',\n        PARSER_VERSION = '2.0',\n        HEADER_ROW = TRUE\n    ) AS [result]\nGO\n\nSELECT COUNT(1) FROM bronze.vw_trip_data_green_csv\nWHERE year = '2020' AND month = '01'\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "nyc_taxi_ldw",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

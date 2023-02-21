@@ -1,0 +1,20 @@
+{
+	"name": "8_explore_trip_data_green_parquet",
+	"properties": {
+		"folder": {
+			"name": "nyc_taxi/discovery"
+		},
+		"content": {
+			"query": "USE nyc_taxi_discovery;\n\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'trip_data_green_parquet/year=*/month=*/',\n        FORMAT = 'PARQUET',\n        DATA_SOURCE = 'nyc_taxi_data_raw'\n    ) \n    WITH(\n        tip_amount FLOAT,\n        trip_type   INT\n    )AS [result]\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "nyc_taxi_discovery",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

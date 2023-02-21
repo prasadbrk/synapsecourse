@@ -1,0 +1,20 @@
+{
+	"name": "3_create_external_file_formats",
+	"properties": {
+		"folder": {
+			"name": "nyc_taxi/ldw"
+		},
+		"content": {
+			"query": "USE nyc_taxi_ldw;\n\nif NOT EXISTS(select * from sys.external_file_formats where name = 'csv_file_format' )\n-- Create an external file format for DELIMITED (CSV/TSV) files.\nCREATE EXTERNAL FILE FORMAT csv_file_format\nWITH (\n        FORMAT_TYPE = DELIMITEDTEXT,\nformat_options (\n    FIELD_TERMINATOR = ','\n    , STRING_DELIMITER = '\"'\n    , First_Row = 2\n    , USE_TYPE_DEFAULT = FALSE\n    , Encoding = 'UTF8'\n    , PARSER_VERSION = '2.0')\n);\n\nif NOT EXISTS(select * from sys.external_file_formats where name = 'csv_file_format_pv1' )\nCREATE EXTERNAL FILE FORMAT csv_file_format_pv1\nWITH (\n        FORMAT_TYPE = DELIMITEDTEXT,\nformat_options (\n    FIELD_TERMINATOR = ','\n    , STRING_DELIMITER = '\"'\n    , First_Row = 2\n    , USE_TYPE_DEFAULT = FALSE\n    , Encoding = 'UTF8'\n    , PARSER_VERSION = '1.0')\n);\n\n\nif NOT EXISTS(select * from sys.external_file_formats where name = 'tsv_file_format' )\nCREATE EXTERNAL FILE FORMAT tsv_file_format\nWITH (\n        FORMAT_TYPE = DELIMITEDTEXT,\nformat_options (\n    FIELD_TERMINATOR = '\\t'\n    , STRING_DELIMITER = '\"'\n    , First_Row = 2\n    , USE_TYPE_DEFAULT = FALSE\n    , Encoding = 'UTF8'\n    , PARSER_VERSION = '2.0')\n);\n\n\nif NOT EXISTS(select * from sys.external_file_formats where name = 'tsv_file_format_pv1' )\nCREATE EXTERNAL FILE FORMAT tsv_file_format_pv1\nWITH (\n        FORMAT_TYPE = DELIMITEDTEXT,\nformat_options (\n    FIELD_TERMINATOR = '\\t'\n    , STRING_DELIMITER = '\"'\n    , First_Row = 2\n    , USE_TYPE_DEFAULT = FALSE\n    , Encoding = 'UTF8'\n    , PARSER_VERSION = '1.0')\n);\n\n\nif NOT EXISTS(select * from sys.external_file_formats where name = 'parquet_file_format' )\nCREATE EXTERNAL FILE FORMAT parquet_file_format  \nWITH (  \n    FORMAT_TYPE = PARQUET,\n        DATA_COMPRESSION = 'org.apache.hadoop.io.compress.SnappyCodec'  \n     );  \n\n\nif NOT EXISTS(select * from sys.external_file_formats where name = 'delta_file_format' )\n     CREATE EXTERNAL FILE FORMAT delta_file_format\nWITH (\n         FORMAT_TYPE = DELTA,\n         DATA_COMPRESSION = 'org.apache.hadoop.io.compress.SnappyCodec'  \n      );",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "nyc_taxi_ldw",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

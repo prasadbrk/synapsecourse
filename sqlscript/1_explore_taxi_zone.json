@@ -1,0 +1,20 @@
+{
+	"name": "1_explore_taxi_zone",
+	"properties": {
+		"folder": {
+			"name": "nyc_taxi/discovery"
+		},
+		"content": {
+			"query": "-- This is auto-generated code\nSELECT\n    *\nFROM\n    OPENROWSET(\n        BULK 'https://synapsecoursedl10.dfs.core.windows.net/nyc-taxi-data/raw/taxi_zone.csv',\n        FORMAT = 'CSV',\n        PARSER_VERSION = '2.0',\n        HEADER_ROW = TRUE\n    ) \n    WITH (\n        LocationID smallint,\n        Borough varchar(15),\n        Zone varchar(50),\n        service_zone varchar(15)\n    )AS [result]\n\n-- have a look a the metadata\nEXEC sp_describe_first_result_set N'SELECT\n    *\nFROM\n    OPENROWSET(\n        BULK ''https://synapsecoursedl10.dfs.core.windows.net/nyc-taxi-data/raw/taxi_zone.csv'',\n        FORMAT = ''CSV'',\n        PARSER_VERSION = ''2.0'',\n        HEADER_ROW = TRUE\n    ) \n    WITH (\n        LocationID smallint,\n        Borough varchar(15),\n        Zone varchar(50),\n        service_zone varchar(15)\n    )AS [result]'\n\nSELECT name, collation_name from sys.databases;\n\nCREATE DATABASE nyc_taxi_discovery;\n\nUSE nyc_taxi_discovery;\n\nALTER DATABASE nyc_taxi_discovery COLLATE Latin1_General_100_CI_AI_SC_UTF8;\n-- read data from files without header\n\ndrop external data source nyc_taxi_data\n\ncreate external data source nyc_taxi_data_raw\nwith (\n     location = 'https://synapsecoursedl10.dfs.core.windows.net/nyc-taxi-data/raw'\n)\n\nSELECT\n        *\nFROM\n    OPENROWSET(\n        BULK 'taxi_zone.csv',\n        data_source = 'nyc_taxi_data_raw',\n        FORMAT = 'CSV',\n        PARSER_VERSION = '2.0',\n        first_row = 2\n    ) \n    WITH (\n        locationid smallint 1,\n        borough varchar(15) 2,\n        zone varchar(50) 3,\n        service_zone varchar(15) 4\n    )AS [result]",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "nyc_taxi_discovery",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

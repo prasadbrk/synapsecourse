@@ -1,0 +1,20 @@
+{
+	"name": "7_explore_trip_data_green_csv",
+	"properties": {
+		"folder": {
+			"name": "nyc_taxi/discovery"
+		},
+		"content": {
+			"query": "USE nyc_taxi_discovery;\n\n-- This is auto-generated code\nSELECT\n    result.filename() as filename,\n    COUNT(1) as record_count\nFROM\n    OPENROWSET(\n        BULK 'trip_data_green_csv/year=*/month=*/*.csv',\n        DATA_SOURCE = 'nyc_taxi_data_raw',\n        FORMAT = 'CSV',\n        PARSER_VERSION = '2.0',\n        HEADER_ROW = TRUE\n    ) AS [result]\nGROUP BY result.filename();\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "nyc_taxi_discovery",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
