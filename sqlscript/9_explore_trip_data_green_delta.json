@@ -1,0 +1,20 @@
+{
+	"name": "9_explore_trip_data_green_delta",
+	"properties": {
+		"folder": {
+			"name": "nyc_taxi/discovery"
+		},
+		"content": {
+			"query": "use nyc_taxi_discovery;\n\nselect top 100 * \nfrom OPENROWSET(\n    BULK 'trip_data_green_delta/',\n    data_source = 'nyc_taxi_data_raw',\n    format = 'DELTA'\n\n) \nwith(\ntip_amount float,\ntrip_type int,\nyear varchar(4),\nmonth varchar(2)\n)as trip_data\n\nEXEC sp_describe_first_result_set N'select top 100 * \nfrom OPENROWSET(\n    BULK ''trip_data_green_delta/'',\n    data_source = ''nyc_taxi_data_raw'',\n    format = ''DELTA''\n\n)with(\nVendorID int,\nlpep_pickup_datetime datetime2(7),\nlpep_dropoff_datetime datetime2(7),\nstore_and_fwd_flag varchar(1),\nRatecodeID int,\nPULocationID int,\nDOLocationID int,\npassenger_count int,\ntrip_distance float,\nfare_amount float,\nextra float,\nmta_tax float,\ntip_amount float,\ntolls_amount float,\nehail_fee int,\nimprovement_surcharge float,\ntotal_amount float,\npayment_type int,\ntrip_type int,\ncongestion_surcharge float,\nyear varchar(4),\nmonth varchar(2)\n)as trip_data'\n\n\nselect count(distinct payment_type) \nfrom OPENROWSET(\n    BULK 'trip_data_green_delta/',\n    data_source = 'nyc_taxi_data_raw',\n    format = 'DELTA'\n\n) \nas trip_data\nwhere year = '2020' and month = '01';\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "nyc_taxi_discovery",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

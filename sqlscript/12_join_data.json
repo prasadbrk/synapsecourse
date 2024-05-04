@@ -1,0 +1,20 @@
+{
+	"name": "12_join_data",
+	"properties": {
+		"folder": {
+			"name": "nyc_taxi/discovery"
+		},
+		"content": {
+			"query": "use nyc_taxi_discovery;\n\nSELECT taxi_zone.borough, count(1) as number_of_trips\nFROM\n    OPENROWSET(\n        BULK 'trip_data_green_parquet/year=2020/month=01/*',\n        FORMAT = 'PARQUET',\n        DATA_SOURCE = 'nyc_taxi_data_raw'\n    ) AS trip_data\n    JOIN\n    OPENROWSET(\n        BULK 'taxi_zone.csv',\n        data_source = 'nyc_taxi_data_raw',\n        FORMAT = 'CSV',\n        PARSER_VERSION = '2.0',\n        first_row = 2\n    ) \n    WITH (\n        locationid smallint 1,\n        borough varchar(15) 2,\n        zone varchar(50) 3,\n        service_zone varchar(15) 4\n    )AS taxi_zone\non trip_data.PULocationID = taxi_zone.locationid\ngroup by taxi_zone.borough;",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "nyc_taxi_discovery",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

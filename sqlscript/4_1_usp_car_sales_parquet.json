@@ -1,0 +1,20 @@
+{
+	"name": "4_1_usp_car_sales_parquet",
+	"properties": {
+		"folder": {
+			"name": "cars"
+		},
+		"content": {
+			"query": "USE CARS\nGO\n\nCREATE OR ALTER PROCEDURE silver.usp_silver_car_sales \n@year VARCHAR(4),\n@month VARCHAR(2)\n\nAS BEGIN\n        DECLARE @create_sql_stmt NVARCHAR(MAX),\n                @drop_sql_stmt NVARCHAR(MAX);\n\nSET @create_sql_stmt= 'CREATE EXTERNAL TABLE silver.car_sales_'+@year+'_'+@month+'\n WITH (\n            LOCATION = ''/car_sales/parquet/year='+@year+'/month='+@month+''',\n            DATA_SOURCE = [files_synapsecoursedl10_dfs_core_windows_net],\n            FILE_FORMAT = ParquetFormat\n            ) AS\n\nSELECT *\nFROM bronze.car_sales\nWHERE YEAR(date) = '+@year+' AND MONTH(date) = '+@month+''\n\nprint(@create_sql_stmt);\n\nEXEC sp_executesql @create_sql_stmt;\n\nset @drop_sql_stmt = 'DROP EXTERNAL TABLE silver.car_sales_'+@year+'_'+@month;\nprint(@drop_sql_stmt);\n\nEXEC sp_executesql @drop_sql_stmt;\n\nEND;\n\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "cars",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

@@ -1,0 +1,20 @@
+{
+	"name": "6_explore_rate_code",
+	"properties": {
+		"folder": {
+			"name": "nyc_taxi/discovery"
+		},
+		"content": {
+			"query": "USE nyc_taxi_discovery;\n\n SELECT rate_code_id, rate_code\nFROM\n    OPENROWSET(\n        BULK 'rate_code.json',\n        data_source = 'nyc_taxi_data_raw',\n        FORMAT = 'CSV',\n        fieldterminator = '0x0b',\n        fieldquote = '0x0b',\n        rowterminator = '0x0b'\n    )\n    with(\n        jsonDoc nvarchar(max)\n    )as rate_code \n    CROSS APPLY openjson(jsonDoc)\n    with(\n        rate_code_id SMALLINT,\n        rate_code VARCHAR(20)\n    )\n    ;\n\n-- read multiline json \n     SELECT rate_code_id, rate_code\nFROM\n    OPENROWSET(\n        BULK 'rate_code_multi_line.json',\n        data_source = 'nyc_taxi_data_raw',\n        FORMAT = 'CSV',\n        fieldterminator = '0x0b',\n        fieldquote = '0x0b',\n        rowterminator = '0x0b'\n    )\n    with(\n        jsonDoc nvarchar(max)\n    )as rate_code \n    CROSS APPLY openjson(jsonDoc)\n    with(\n        rate_code_id SMALLINT,\n        rate_code VARCHAR(20)\n    )\n    ;",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "nyc_taxi_discovery",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

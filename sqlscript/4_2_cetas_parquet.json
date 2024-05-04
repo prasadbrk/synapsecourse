@@ -1,0 +1,20 @@
+{
+	"name": "4_2_cetas_parquet",
+	"properties": {
+		"folder": {
+			"name": "cars"
+		},
+		"content": {
+			"query": "use cars\nGO\n\nCREATE EXTERNAL FILE FORMAT ParquetFormat\nWITH (\n        FORMAT_TYPE = PARQUET,\n        DATA_COMPRESSION = 'org.apache.hadoop.io.compress.SnappyCodec'\n    )\nGO\n\n-- IF OBJECT_ID('silver.cars_parquet') IS NOT NULL\n--     DROP EXTERNAL TABLE silver.cars_parquet\n\n-- DROP EXTERNAL FILE FORMAT ParquetFileFormat;\n\n\nEXEC silver.usp_silver_car_sales '2022', '1';\nEXEC silver.usp_silver_car_sales '2022', '2';\nEXEC silver.usp_silver_car_sales '2022', '3';\nEXEC silver.usp_silver_car_sales '2022', '4';\nEXEC silver.usp_silver_car_sales '2022', '5';\nEXEC silver.usp_silver_car_sales '2022', '6';\nEXEC silver.usp_silver_car_sales '2022', '7';\nEXEC silver.usp_silver_car_sales '2022', '8';\nEXEC silver.usp_silver_car_sales '2022', '9';\nEXEC silver.usp_silver_car_sales '2022', '10';\nEXEC silver.usp_silver_car_sales '2022', '11';\nEXEC silver.usp_silver_car_sales '2022', '12';\nEXEC silver.usp_silver_car_sales '2023', '1';\nEXEC silver.usp_silver_car_sales '2023', '2';\nEXEC silver.usp_silver_car_sales '2023', '3';\nEXEC silver.usp_silver_car_sales '2023', '4';\nEXEC silver.usp_silver_car_sales '2023', '5';\nEXEC silver.usp_silver_car_sales '2023', '6';\nEXEC silver.usp_silver_car_sales '2023', '7';\nEXEC silver.usp_silver_car_sales '2023', '8';\nEXEC silver.usp_silver_car_sales '2023', '9';\nEXEC silver.usp_silver_car_sales '2023', '10';\nEXEC silver.usp_silver_car_sales '2023', '11';\nEXEC silver.usp_silver_car_sales '2023', '12';\n\n-- SELECT TOP 5 * FROM silver.car_sales_2023_12;",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "cars",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

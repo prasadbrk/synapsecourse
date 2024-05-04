@@ -1,0 +1,20 @@
+{
+	"name": "1_explore_car_sales",
+	"properties": {
+		"folder": {
+			"name": "cars"
+		},
+		"content": {
+			"query": "-- This is auto-generated code\nSELECT\ntop 10 *\nFROM\n    OPENROWSET(\n        BULK 'car_sales.csv',\n        DATA_SOURCE = 'car_sales_raw',\n        FORMAT = 'CSV',\n        PARSER_VERSION = '2.0',\n        FIRSTROW = 2\n    ) \n    with (\n        car_id varchar(15) 1, \n        date date 2, \n        cust_name varchar(50) 3, \n        gender  varchar(6) 4, \n        annual_income int 5, \n        dealer_name varchar (50) 6, \n        company varchar(15) 7, \n        model varchar(15) 8, \n        engine varchar (30) 9, \n        transmission varchar(10) 10, \n        color varchar(15) 11, \n        price bigint 12, \n        dealer_no VARCHAR(15) 13,  \n        body_style varchar(10) 14, \n        phone varchar(10) 15, \n        dealer_region varchar(10) 16 \n    )\n    AS [result]\n\n\n\n-- select name, collation_name from sys.databases;\n\n-- create database cars COLLATE Latin1_General_100_CI_AI_SC_UTF8;\n-- use cars;\n\n-- EXEC sp_describe_first_result_set N'SELECT\n--     TOP 100 *\n-- FROM\n--     OPENROWSET(\n--         BULK ''https://synapsecoursedl10.dfs.core.windows.net/files/car_sales/car_sales.csv'',\n--         FORMAT = ''CSV'',\n--         PARSER_VERSION = ''2.0'',\n--         HEADER_ROW = TRUE\n--     ) AS [result]'\n\n\n\n-- Latin1_General_100_CI_AI_SC_UTF8\n\n-- Latin1_General_100_BIN2_UTF8",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "cars2",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

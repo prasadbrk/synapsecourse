@@ -1,0 +1,20 @@
+{
+	"name": "3_cars_ext_tbl",
+	"properties": {
+		"folder": {
+			"name": "cars"
+		},
+		"content": {
+			"query": "-- external table needs to be dropped before dropping external file format\n-- DROP EXTERNAL TABLE bronze.car_sales;\n\n-- DROP EXTERNAL FILE FORMAT SynapseDelimitedTextFormat;\nUSE cars\nGO\n\nIF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseDelimitedTextFormat') \n\tCREATE EXTERNAL FILE FORMAT [SynapseDelimitedTextFormat] \n\tWITH ( FORMAT_TYPE = DELIMITEDTEXT ,\n\t       FORMAT_OPTIONS (\n    FIELD_TERMINATOR = ','\n    , STRING_DELIMITER = '\"'\n    ,First_Row = 2\n    , USE_TYPE_DEFAULT = FALSE\n    , Encoding = 'UTF8'\n    , PARSER_VERSION = '2.0'\n\t\t\t))\nGO\n\nIF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'files_synapsecoursedl10_dfs_core_windows_net') \n\tCREATE EXTERNAL DATA SOURCE [files_synapsecoursedl10_dfs_core_windows_net] \n\tWITH (\n\t\tLOCATION = 'abfss://files@synapsecoursedl10.dfs.core.windows.net' \n\t)\nGO\n\nIF OBJECT_ID('bronze.car_sales') IS NOT NULL\n    DROP EXTERNAL TABLE bronze.car_sales\n\nCREATE EXTERNAL TABLE bronze.car_sales (\n\t[car_id] nvarchar(15),\n\t[date] DATE,\n\t[customer_name] nvarchar(50),\n\t[gender] nvarchar(20),\n\t[annual_income] bigint,\n\t[dealer_name] nvarchar(100),\n\t[company] nvarchar(50),\n\t[model] nvarchar(30),\n\t[engine] nvarchar(100),\n\t[transmission] nvarchar(20),\n\t[color] nvarchar(15),\n\t[price] bigint,\n\t[dealer_no ] nvarchar(25),\n\t[body_style] nvarchar(20),\n\t[phone] bigint,\n\t[dealer_region] nvarchar(30)\n\t)\n\tWITH (\n\tLOCATION = 'car_sales/car_sales.csv',\n\tDATA_SOURCE = [files_synapsecoursedl10_dfs_core_windows_net],\n\tFILE_FORMAT = [SynapseDelimitedTextFormat]\n\t)\nGO\n\n\nSELECT DISTINCT YEAR(date) as yr, MONTH(date) as mth, count(1) FROM bronze.car_sales\ngroup by YEAR(date), MONTH(date)\norder by YEAR(date), MONTH(date)\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "cars",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

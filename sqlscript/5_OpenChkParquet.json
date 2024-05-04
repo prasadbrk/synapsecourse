@@ -1,0 +1,20 @@
+{
+	"name": "5_OpenChkParquet",
+	"properties": {
+		"folder": {
+			"name": "cars"
+		},
+		"content": {
+			"query": "use cars \nGO\n\nDROP VIEW if EXISTS silver.vw_car_sales\nGO\n\nCREATE view silver.vw_car_sales AS\nSELECT result.*\nFROM OPENROWSET(\n        BULK 'car_sales/parquet/year=*/month=*/*.parquet',\n        DATA_SOURCE ='files_synapsecoursedl10_dfs_core_windows_net',\n        FORMAT = 'PARQUET'\n)\nWITH\n(\n    [car_id] nvarchar(15),\n\t[date] DATE,\n\t[customer_name] nvarchar(50),\n\t[gender] nvarchar(20),\n\t[annual_income] bigint,\n\t[dealer_name] nvarchar(100),\n\t[company] nvarchar(50),\n\t[model] nvarchar(30),\n\t[engine] nvarchar(100),\n\t[transmission] nvarchar(20),\n\t[color] nvarchar(15),\n\t[price] bigint,\n\t[dealer_no ] nvarchar(25),\n\t[body_style] nvarchar(20),\n\t[phone] bigint,\n\t[dealer_region] nvarchar(30)\n)\nAS [result]\nGO\n\nSELECT * from silver.vw_car_sales\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "cars",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

@@ -1,0 +1,20 @@
+{
+	"name": "6_cars_silver_view",
+	"properties": {
+		"folder": {
+			"name": "cars"
+		},
+		"content": {
+			"query": "USE cars\nGO\n\nDROP VIEW IF EXISTS silver.vw_car_sales\nGO\n\nCREATE VIEW silver.vw_car_sales\nAS\nSELECT\n        result.filepath(1) as year,\n        result.filepath(2) as month,\n        result.*\nFROM\n    OPENROWSET(\n        BULK 'car_sales/parquet/year=*/month=*/*.parquet',\n        DATA_SOURCE = 'files_synapsecoursedl10_dfs_core_windows_net',\n        FORMAT = 'PARQUET'\n    ) \n    with(\n        [car_id] nvarchar(15),\n        [date] DATE,\n        [customer_name] nvarchar(50),\n        [gender] nvarchar(20),\n        [annual_income] bigint,\n        [dealer_name] nvarchar(100),\n        [company] nvarchar(50),\n        [model] nvarchar(30),\n        [engine] nvarchar(100),\n        [transmission] nvarchar(20),\n        [color] nvarchar(15),\n        [price] bigint,\n        [dealer_no ] nvarchar(25),\n        [body_style] nvarchar(20),\n        [phone] bigint,\n        [dealer_region] nvarchar(30)\n    ) AS [result]\nGO\n\nSELECT * FROM silver.vw_car_sales\nWHERE year='2022' and month='10'\nGO\n\n    ",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "cars",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

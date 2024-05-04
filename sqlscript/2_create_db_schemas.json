@@ -1,0 +1,20 @@
+{
+	"name": "2_create_db_schemas",
+	"properties": {
+		"folder": {
+			"name": "cars"
+		},
+		"content": {
+			"query": "create database cars \n\tCOLLATE Latin1_General_100_BIN2_UTF8;\nGO\n\nuse cars\nGO\n\n-- raw\ncreate SCHEMA bronze\nGO\n\n-- cleansed and conformed data\ncreate SCHEMA silver\nGO\n\n-- curated \nCREATE SCHEMA gold\nGO\n\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "master",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

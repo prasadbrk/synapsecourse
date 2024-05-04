@@ -1,0 +1,20 @@
+{
+	"name": "7_gold_sales_summary",
+	"properties": {
+		"folder": {
+			"name": "cars"
+		},
+		"content": {
+			"query": "USE cars\nGO\n\nDROP VIEW IF EXISTS gold.car_sales_summ\nGO\n\nCREATE VIEW gold.car_sales_summ AS\nSELECT color, count(car_id) as sales_total\nFROM silver.vw_car_sales\nGROUP BY color\nGO\n\nselect * from gold.car_sales_summ\nGO\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "cars",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
